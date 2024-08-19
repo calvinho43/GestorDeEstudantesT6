@@ -152,6 +152,29 @@ namespace GestorDeEstudantesT6
             MeuBancoDeDados meuBancoDeDados = new MeuBancoDeDados();
             MySqlCommand command = new MySqlCommand("SELECT `id`, `nome`, `sobrenome`, `nascimento`, `genero`, `telefone`, `endereco`, `foto` FROM `estudantes` WHERE `id`=" + id, meuBancoDeDados.getConexao);
 
+            DataTable tabela = estudante.getEstudantes(command);
+
+            if (tabela.Rows.Count > 0)
+            {
+                textBoxNome.Text = tabela.Rows[0]["nome"].ToString();
+                textBoxSobrenome.Text = tabela.Rows[0]["sobrenome"].ToString();
+                textBoxTelefone.Text = tabela.Rows[0]["telefone"].ToString();
+                textBoxEndereco.Text = tabela.Rows[0]["endereco"].ToString();
+                dateTimePickerNascimento.Value = (DateTime)tabela.Rows[0]["nascimento"];
+
+                if (tabela.Rows[0]["genero"].ToString() == "Feminino")
+                {
+                    radioButtonFeminino.Checked = true;
+                }
+                else 
+                {
+                    radioButtonMasculino.Checked = false;
+                }
+                byte[] imagem = (byte[])tabela.Rows[0]["foto"];
+                  
+                MemoryStream fotoDoAluno = new MemoryStream(imagem);
+                pictureBoxFoto.Image =  Image.FromStream(fotoDoAluno);
+            }
         }
     }
 }
